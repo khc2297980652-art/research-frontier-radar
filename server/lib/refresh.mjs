@@ -232,7 +232,9 @@ export async function runRefresh({ onLog = () => {} } = {}) {
     const figCandidates = papers.filter((p) => p.arxivId)
     runtime.progress = `提取配图 · 候选 ${figCandidates.length} 篇`
     const figStat = await attachFigures(figCandidates, {
-      limit: 45,
+      // 缓存是跨次累积的，但首次运行（CI 上缓存为空）只抓 45 篇会让线上配图
+      // 远少于实际可得数量。一次抓够当前窗口的全部候选，首轮即可收敛。
+      limit: 250,
       onProgress: (d, t) => {
         runtime.progress = `提取配图 ${d}/${t}`
       },

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="按学科聚合人工智能与遥感领域顶级期刊和预印本的最新文献，重点呈现摘要与配图。" />
+    <title>科研前沿雷达 · 顶刊最新文献</title>
+    <script>
+      // 在首帧前套用主题，避免闪白
+      ;(function () {
+        try {
+          var saved = localStorage.getItem('rr-theme')
+          var dark = saved
+            ? saved === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+          if (dark) document.documentElement.classList.add('dark')
+        } catch (e) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

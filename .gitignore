@@ -1,0 +1,13 @@
+node_modules/
+
+# 运行时缓存：抓取结果与配图缓存，由 Actions 重新生成，不进版本库
+data/
+
+# 构建产物（dist = 本地服务，dist-static = 发布用静态站点）
+web/dist/
+web/dist-static/
+# 静态导出目录：CI 里由 npm run refresh && npm run build:static 现场生成
+web/public/data/
+
+.env
+*.log

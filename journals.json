@@ -1,0 +1,386 @@
+{
+  "_readme": "学科与期刊白名单配置。citedness = OpenAlex 2 年平均被引（影响因子的免费替代口径），可用 `npm run harvest` + `npm run config` 重新生成。新增学科：复制一段 disciplines 即可，前端会自动出现新的标签页。",
+  "refreshIntervalHours": 6,
+  "windowDays": 90,
+  "disciplines": [
+    {
+      "id": "ai",
+      "name": "人工智能",
+      "nameEn": "Artificial Intelligence",
+      "blurb": "机器学习、计算机视觉、模式识别与智能系统方向的顶级期刊",
+      "defaultThreshold": 9,
+      "arxivCategories": [
+        "cs.AI",
+        "cs.LG",
+        "cs.CV",
+        "cs.CL",
+        "cs.NE",
+        "cs.RO",
+        "stat.ML"
+      ],
+      "keywords": [],
+      "journals": [
+        {
+          "name": "Nature Machine Intelligence",
+          "short": "Nature MI",
+          "issn": "2522-5839",
+          "citedness": 22.664150943396226,
+          "openalexId": "S2912241403",
+          "homepage": "https://www.nature.com/natmachintell/",
+          "core": true
+        },
+        {
+          "name": "IEEE TPAMI",
+          "short": "IEEE TPAMI",
+          "issn": "0162-8828",
+          "citedness": 14.346576500422655,
+          "openalexId": "S199944782",
+          "homepage": "http://www.computer.org/portal/web/tpami",
+          "core": true
+        },
+        {
+          "name": "Information Fusion",
+          "short": "Inf. Fusion",
+          "issn": "1566-2535",
+          "citedness": 12.443794964028777,
+          "openalexId": "S7560371",
+          "homepage": "https://www.journals.elsevier.com/information-fusion",
+          "core": true
+        },
+        {
+          "name": "Medical Image Analysis",
+          "short": "Med. Image Anal.",
+          "issn": "1361-8415",
+          "citedness": 11.04170616113744,
+          "openalexId": "S116571295",
+          "homepage": "https://www.journals.elsevier.com/medical-image-analysis",
+          "core": true
+        },
+        {
+          "name": "IEEE Transactions on Knowledge and Data Engineering",
+          "short": "IEEE TKDE",
+          "issn": "1041-4347",
+          "citedness": 9.835503769705278,
+          "openalexId": "S30698027",
+          "homepage": "https://www.computer.org/web/tkde",
+          "core": true
+        },
+        {
+          "name": "International Journal of Computer Vision",
+          "short": "IJCV",
+          "issn": "0920-5691",
+          "citedness": 9.766059443911793,
+          "openalexId": "S25538012",
+          "homepage": "http://link.springer.com/journal/11263",
+          "core": true
+        },
+        {
+          "name": "IEEE Transactions on Image Processing",
+          "short": "IEEE TIP",
+          "issn": "1057-7149",
+          "citedness": 9.307122507122507,
+          "openalexId": "S4210173141",
+          "homepage": "http://ieeexplore.ieee.org/servlet/opac?punumber=83",
+          "core": true
+        },
+        {
+          "name": "IEEE Transactions on Cybernetics",
+          "short": "IEEE TCyb",
+          "issn": "2168-2267",
+          "citedness": 9.193633952254642,
+          "openalexId": "S4210191041",
+          "homepage": "http://ieeexplore.ieee.org/servlet/opac?punumber=6221036",
+          "core": true
+        },
+        {
+          "name": "IEEE Transactions on Neural Networks and Learning Systems",
+          "short": "IEEE TNNLS",
+          "issn": "2162-237X",
+          "citedness": 9.16954851104707,
+          "openalexId": "S4210175523",
+          "homepage": "http://cis.ieee.org/ieee-transactions-on-neural-networks-and-learning-systems.html",
+          "core": true
+        },
+        {
+          "name": "Expert Systems with Applications",
+          "short": "Expert Syst. Appl.",
+          "issn": "0957-4174",
+          "citedness": 7.520185435580452,
+          "openalexId": "S13144211",
+          "homepage": "https://www.journals.elsevier.com/expert-systems-with-applications",
+          "core": false
+        },
+        {
+          "name": "Pattern Recognition",
+          "short": "Pattern Recognit.",
+          "issn": "0031-3203",
+          "citedness": 6.601349778915522,
+          "openalexId": "S414566",
+          "homepage": "https://www.journals.elsevier.com/pattern-recognition",
+          "core": false
+        },
+        {
+          "name": "ACM Transactions on Graphics",
+          "short": "ACM TOG",
+          "issn": "0730-0301",
+          "citedness": 6.49800796812749,
+          "openalexId": "S185367456",
+          "homepage": "https://tog.acm.org/",
+          "core": false
+        },
+        {
+          "name": "Knowledge-Based Systems",
+          "short": "Knowl.-Based Syst.",
+          "issn": "0950-7051",
+          "citedness": 6.4522455383408515,
+          "openalexId": "S10169007",
+          "homepage": "https://www.journals.elsevier.com/knowledge-based-systems",
+          "core": false
+        },
+        {
+          "name": "IEEE Transactions on Emerging Topics in Computational Intelligence",
+          "short": "IEEE TETCI",
+          "issn": "2471-285X",
+          "citedness": 6.188583078491336,
+          "openalexId": "S4210210251",
+          "homepage": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=7433297",
+          "core": false
+        },
+        {
+          "name": "Neural Networks",
+          "short": "Neural Netw.",
+          "issn": "0893-6080",
+          "citedness": 5.686292548298068,
+          "openalexId": "S123019304",
+          "homepage": "http://www.elsevier.com/locate/neunet",
+          "core": false
+        },
+        {
+          "name": "Artificial Intelligence",
+          "short": "Artif. Intell.",
+          "issn": "0004-3702",
+          "citedness": 3.6573208722741435,
+          "openalexId": "S196139623",
+          "homepage": "http://www.elsevier.com/locate/artint",
+          "core": false
+        },
+        {
+          "name": "Machine Learning",
+          "short": "Mach. Learn.",
+          "issn": "0885-6125",
+          "citedness": 3.3774752475247523,
+          "openalexId": "S62148650",
+          "homepage": "http://www.springer.com/west/home/computer/artificial?SGWID=4-147-70-35726603-0",
+          "core": false
+        }
+      ]
+    },
+    {
+      "id": "rs",
+      "name": "遥感",
+      "nameEn": "Remote Sensing",
+      "blurb": "遥感科学、摄影测量、地球观测与地理信息方向的顶级期刊",
+      "defaultThreshold": 6,
+      "arxivCategories": [
+        "eess.IV",
+        "physics.ao-ph"
+      ],
+      "keywords": [
+        "remote sensing",
+        "satellite imagery",
+        "satellite image",
+        "hyperspectral",
+        "multispectral",
+        "sar image",
+        "synthetic aperture radar",
+        "land cover",
+        "land use",
+        "earth observation",
+        "photogrammetry",
+        "lidar",
+        "point cloud",
+        "geospatial",
+        "aerial imagery",
+        "aerial image",
+        "change detection",
+        "vegetation index",
+        "ndvi",
+        "crop mapping",
+        "geographic information"
+      ],
+      "journals": [
+        {
+          "name": "Remote Sensing of Environment",
+          "short": "RSE",
+          "issn": "0034-4257",
+          "citedness": 11.372241992882563,
+          "openalexId": "S141808269",
+          "homepage": "https://www.journals.elsevier.com/remote-sensing-of-environment",
+          "core": true
+        },
+        {
+          "name": "Earth System Science Data",
+          "short": "ESSD",
+          "issn": "1866-3508",
+          "citedness": 11.338169642857142,
+          "openalexId": "S106909380",
+          "homepage": "http://www.earth-system-science-data.net/",
+          "core": true
+        },
+        {
+          "name": "ISPRS Journal of Photogrammetry and Remote Sensing",
+          "short": "ISPRS J P&RS",
+          "issn": "0924-2716",
+          "citedness": 10.583041958041958,
+          "openalexId": "S173339282",
+          "homepage": "https://www.journals.elsevier.com/isprs-journal-of-photogrammetry-and-remote-sensing",
+          "core": true
+        },
+        {
+          "name": "Journal of Remote Sensing",
+          "short": "J. Remote Sens.",
+          "issn": "2694-1589",
+          "citedness": 9.124293785310735,
+          "openalexId": "S4210236127",
+          "homepage": "https://spj.sciencemag.org/journals/remotesensing/",
+          "core": true
+        },
+        {
+          "name": "IEEE Transactions on Geoscience and Remote Sensing",
+          "short": "IEEE TGRS",
+          "issn": "0196-2892",
+          "citedness": 7.531274535461921,
+          "openalexId": "S111326731",
+          "homepage": "http://ieeexplore.ieee.org/servlet/opac?punumber=36",
+          "core": true
+        },
+        {
+          "name": "IEEE Geoscience and Remote Sensing Magazine",
+          "short": "IEEE GRSM",
+          "issn": "2473-2397",
+          "citedness": 6.615183246073299,
+          "openalexId": "S2491948244",
+          "homepage": "http://ieeexplore.ieee.org/servlet/opac?punumber=6245518",
+          "core": true
+        },
+        {
+          "name": "International Journal of Digital Earth",
+          "short": "IJDE",
+          "issn": "1753-8947",
+          "citedness": 6.258099352051836,
+          "openalexId": "S199162493",
+          "homepage": "https://www.tandfonline.com/toc/tjde20/current",
+          "core": true
+        },
+        {
+          "name": "GIScience & Remote Sensing",
+          "short": "GISci. Remote Sens.",
+          "issn": "1548-1603",
+          "citedness": 5.443645083932854,
+          "openalexId": "S7804318",
+          "homepage": "https://www.tandfonline.com/toc/tgrs20/current",
+          "core": true
+        },
+        {
+          "name": "International Journal of Applied Earth Observation and Geoinformation",
+          "short": "IJAEOG",
+          "issn": "1569-8432",
+          "citedness": 5.351024697845507,
+          "openalexId": "S4210179989",
+          "homepage": null,
+          "core": true
+        },
+        {
+          "name": "IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing",
+          "short": "IEEE JSTARS",
+          "issn": "1939-1404",
+          "citedness": 5.036356528537921,
+          "openalexId": "S117727964",
+          "homepage": "https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=4609443",
+          "core": true
+        },
+        {
+          "name": "Remote Sensing",
+          "short": "Remote Sensing",
+          "issn": "2072-4292",
+          "citedness": 4.984999157256025,
+          "openalexId": "S43295729",
+          "homepage": "http://www.mdpi.com/journal/remotesensing",
+          "core": true
+        },
+        {
+          "name": "Geo-spatial Information Science",
+          "short": "Geo-spat. Inf. Sci.",
+          "issn": "1009-5020",
+          "citedness": 4.522222222222222,
+          "openalexId": "S36798160",
+          "homepage": "https://www.tandfonline.com/toc/tgsi20/current",
+          "core": true
+        },
+        {
+          "name": "IEEE Geoscience and Remote Sensing Letters",
+          "short": "IEEE GRSL",
+          "issn": "1545-598X",
+          "citedness": 4.0375775264502005,
+          "openalexId": "S126920919",
+          "homepage": "http://ieeexplore.ieee.org/servlet/opac?punumber=8859",
+          "core": true
+        },
+        {
+          "name": "Science of Remote Sensing",
+          "short": "Sci. Remote Sens.",
+          "issn": "2666-0172",
+          "citedness": 3.9871134020618557,
+          "openalexId": "S4210173871",
+          "homepage": "https://www.journals.elsevier.com/science-of-remote-sensing",
+          "core": true
+        },
+        {
+          "name": "ISPRS International Journal of Geo-Information",
+          "short": "ISPRS IJGI",
+          "issn": "2220-9964",
+          "citedness": 3.767662053896577,
+          "openalexId": "S2764431341",
+          "homepage": "http://www.mdpi.com/journal/ijgi",
+          "core": true
+        },
+        {
+          "name": "Journal of Geodesy",
+          "short": "J. Geodesy",
+          "issn": "0949-7714",
+          "citedness": 3.6597222222222223,
+          "openalexId": "S4210204015",
+          "homepage": "https://www.springer.com/journal/190",
+          "core": true
+        },
+        {
+          "name": "Big Earth Data",
+          "short": "Big Earth Data",
+          "issn": "2096-4471",
+          "citedness": 2.9526627218934913,
+          "openalexId": "S4210215966",
+          "homepage": "https://www.tandfonline.com/toc/tbed20/current",
+          "core": true
+        },
+        {
+          "name": "Photogrammetric Engineering & Remote Sensing",
+          "short": "PE&RS",
+          "issn": "0099-1112",
+          "citedness": 1.9534883720930232,
+          "openalexId": "S99003644",
+          "homepage": "http://www.asprs.org/Photogrammetric-Engineering-and-Remote-Sensing/PE-RS-Journals.html",
+          "core": true
+        },
+        {
+          "name": "Remote Sensing Letters",
+          "short": "Remote Sensing Letters",
+          "issn": "2150-704X",
+          "citedness": 1.5801526717557253,
+          "openalexId": "S2494614724",
+          "homepage": "https://www.tandfonline.com/toc/trsl20/current",
+          "core": false
+        }
+      ]
+    }
+  ]
+}

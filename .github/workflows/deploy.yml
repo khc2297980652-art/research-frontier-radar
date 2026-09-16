@@ -1,0 +1,73 @@
+name: 抓取并发布
+
+# 每 6 小时自动重建一次站点，也可以在 Actions 页面手动触发。
+# 注意：GitHub 的定时任务在仓库连续 60 天没有提交后会自动停用，
+# 手动跑一次或随便推一个提交即可恢复。
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+# 只允许一个部署任务同时进行
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci
+
+      # 配图缓存让 arXiv 图源能跨次累积，而不是每次只抓最新的几十篇
+      - name: 恢复配图缓存
+        uses: actions/cache@v4
+        with:
+          path: data/figures.json
+          key: figures-${{ github.run_id }}
+          restore-keys: figures-
+
+      - name: 抓取最新文献
+        run: npm run refresh
+        env:
+          RADAR_MAILTO: ${{ vars.RADAR_MAILTO }}
+
+      - name: 导出静态数据并构建
+        run: npm run build:static
+
+      # enablement: true 会在首次运行时自动把 Pages 的 Source 设为 GitHub Actions，
+      # 免去手动配置。若仓库不允许开启 Pages（例如免费账号下的私有仓库），
+      # 该步骤会失败，此时需到 Settings → Pages 手动把 Source 选为 GitHub Actions。
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist-static
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

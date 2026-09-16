@@ -107,8 +107,10 @@ GitHub Actions（每 6 小时）
    git remote add origin https://github.com/<你的用户名>/<仓库名>.git
    git push -u origin main
    ```
-3. **开启 Pages**：仓库 → Settings → Pages → Build and deployment → Source 选 **GitHub Actions**。
-   （workflow 里带了 `enablement: true`，多数情况下这一步会自动完成；如果 CI 在这一步报错，按上面手动设置即可。）
+3. **开启 Pages（必做，且必须在第一次成功部署之前）**：
+   仓库 → **Settings** → 左侧 **Pages** → Build and deployment → **Source** 选 **GitHub Actions**。
+   这一步无法由 workflow 自动完成——实测 `actions/configure-pages` 的 `enablement: true`
+   在仓库尚未开通 Pages 时会直接失败，所以必须手动点一次。
 4. **等第一次构建**：推送代码本身就会触发一次；也可以到仓库 → Actions →「抓取并发布」→ Run workflow 手动触发。
    首次约 4–6 分钟（要抓 30 余本期刊 + 提取配图）。
 5. 得到一个永久链接：`https://<你的用户名>.github.io/<仓库名>/`

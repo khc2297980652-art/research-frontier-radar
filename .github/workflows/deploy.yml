@@ -51,12 +51,10 @@ jobs:
       - name: 导出静态数据并构建
         run: npm run build:static
 
-      # enablement: true 会在首次运行时自动把 Pages 的 Source 设为 GitHub Actions，
-      # 免去手动配置。若仓库不允许开启 Pages（例如免费账号下的私有仓库），
-      # 该步骤会失败，此时需到 Settings → Pages 手动把 Source 选为 GitHub Actions。
+      # 前置条件：仓库必须在 Settings → Pages 里把 Source 设为 "GitHub Actions"。
+      # 曾尝试用 enablement: true 让这步自动完成，实测在该仓库上会失败
+      # （Pages 站点需先由仓库所有者手动开通一次），因此改为显式前置依赖。
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:

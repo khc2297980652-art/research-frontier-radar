@@ -1,228 +1,119 @@
-# 科研前沿雷达 · Research Radar
+# 科研前沿雷达 · Research Frontier Radar
 
-按学科聚合**人工智能**与**遥感**领域顶级期刊与预印本的最新文献，**摘要与配图重点呈现**的网页应用。
-一个链接即可分享，手机浏览器打开即用。
+**一个链接，看全人工智能与遥感领域的顶刊新论文。**
 
----
+自动汇总最新文献，把**摘要**和**正文配图**放在最显眼的位置——不必逐本翻期刊，也不必点开原文才知道值不值得读。
 
-## 快速开始
+### 👉 <https://khc2297980652-art.github.io/research-frontier-radar/>
 
-```bash
-npm install        # 安装依赖
-npm start          # 首次运行会自动构建前端并抓取数据
-```
+手机、平板、电脑打开即用，无需注册、无需安装。
 
-打开 <http://localhost:8787> 即可。首次启动需要抓取 30 余本期刊与预印本，通常 **1–3 分钟**，页面会实时显示进度。
+![文献列表视图](docs/screenshot-overview.png)
 
-```bash
-npm run refresh    # 手动跑一次完整抓取（命令行）
-npm run harvest    # 重新抓取期刊指标（OpenAlex）
-npm run config     # 用新指标重新生成 journals.json
-```
-
-> 端口 8787 被占用时会自动顺延到 8788、8789……
+<p align="center">
+  <img src="docs/screenshot-gallery.png" width="620" alt="图片优先视图" />
+  <img src="docs/screenshot-mobile.png" width="170" alt="手机端" />
+</p>
 
 ---
 
-## 功能
+## 30 秒上手
 
-| 能力 | 实现方式 |
-| --- | --- |
-| **分学科获取** | 学科配置驱动，默认「人工智能」「遥感」，新增学科只改配置 |
-| **顶刊优先** | 期刊白名单 + 可调门槛（默认按近两年篇均被引 ≥9 / ≥6 过滤） |
-| **最新文献** | 按发表日期倒序，可选 7/14/30/90 天窗口，每 6 小时自动增量更新 |
-| **分类浏览** | 学科标签页 + 期刊标签 + 时间/来源/排序筛选 + 全文搜索 |
-| **摘要重点显示** | OpenAlex → Crossref 双源补全，独立高亮区块、默认展开、一键复制 |
-| **配图重点显示** | arXiv 开放获取预印本的正文配图，缩略图条 + 全屏灯箱 + 「图片优先」视图 |
-| **深色模式** | 跟随系统，可手动切换并记忆 |
+1. **选学科** — 顶部「人工智能 / 遥感」标签页，数字是该学科当前的文献量。
+2. **调门槛** — 左侧滑杆按**篇均被引**实时筛选期刊，默认只保留高影响力刊物（人工智能 ≥ 9、遥感 ≥ 6）；下方是该门槛下启用的期刊清单，点标签可只看某一本刊。
+3. **看摘要和配图** — 卡片上摘要默认展开、独立高亮；配图以缩略图条呈现，点开是全屏大图（`Esc` 关闭，`←` `→` 切换）。搜索框支持标题、摘要、作者、期刊名。
+4. **看全文** — 卡片底部给出 **DOI / 预印本 / PDF** 链接，点开用**你自己的机构权限**阅读。
 
-快捷键：`Esc` 关闭图片灯箱，`←` `→` 切换上一张/下一张。
+其余：时间窗口 7 / 14 / 30 / 90 天可切；排序可选「最新」或「被引」；「图片优先」视图只在大图上快速扫读；深色模式跟随系统，也可手动切换。
 
 ---
 
-## 数据来源与合规
+## 收录范围
 
-| 来源 | 用途 | 说明 |
-| --- | --- | --- |
-| [OpenAlex](https://openalex.org) | 期刊元数据、摘要、开放获取链接、期刊被引指标 | 免费开放 API，无需密钥 |
-| [arXiv](https://arxiv.org) | 预印本元数据与**正文配图** | 开放获取 |
-| [Crossref](https://www.crossref.org) | 摘要补全 | 免费开放 API |
-
-**关于「篇均被引」**：JCR 影响因子是付费数据，本项目改用 OpenAlex 的 *2-year mean citedness*（近两年篇均被引）作为免费替代口径。它与官方影响因子高度相关但数值略有出入，界面上标注为「篇均被引」而非「影响因子」。
-
-**关于配图版权**：只抓取并展示开放获取预印本（arXiv）的正文配图。订阅制期刊的正文插图受版权保护，本应用**不抓取、不转载**，卡片上给出 DOI 链接。
-
-**关于机构订阅**：本应用**不做任何需要账号登录的抓取**。付费期刊只索引元数据与摘要，全文通过 DOI 跳转，由访问者用自己的机构权限查看——这样应用可以公开分享，也不会因批量下载触发出版商风控。
-
----
-
-## 新增一个学科
-
-编辑项目根目录的 `journals.json`，复制一段 `disciplines` 即可，前端会自动出现新标签页，**无需改代码**：
-
-```jsonc
-{
-  "id": "bio",
-  "name": "生命科学",
-  "nameEn": "Life Sciences",
-  "blurb": "一句话说明",
-  "defaultThreshold": 10,
-  "arxivQuery": "cat:q-bio.BM OR cat:q-bio.GN",
-  "arxivCategories": ["q-bio.BM", "q-bio.GN"],
-  "keywords": [],
-  "journals": [
-    { "name": "Nature Biotechnology", "short": "Nat. Biotech.", "issn": "1087-0156", "citedness": 40.2, "core": true }
-  ]
-}
-```
-
-- `defaultThreshold`：默认门槛，界面上可用滑杆实时调整。
-- `arxivQuery`：arXiv 检索式；遥感这类没有专属分类的学科，可用 `all:"remote sensing" OR ...` 做元数据检索。
-- `journals[].citedness`：填 OpenAlex 的 2 年平均被引；想批量更新，把 ISSN 加进 `scripts/harvest-journals.mjs` 的候选表再跑 `npm run harvest && npm run config`。
-
----
-
-## 发布到公网（零成本方案：GitHub Pages + 定时重建）
-
-这是**不需要服务器、不需要域名、不需要备案**的方案：抓取在 GitHub Actions 里定时执行，
-结果与前端一起打包成纯静态站点发布。浏览器端只需加载一个 JSON，没有任何后端进程。
-
-### 原理
-
-```
-GitHub Actions（每 6 小时）
-   └─ npm run refresh       抓取 OpenAlex / Crossref / arXiv
-        └─ npm run build:static   导出静态 JSON + 打包前端 → web/dist-static/
-             └─ 发布到 GitHub Pages
-```
-
-### 一次性配置（约 5 分钟）
-
-1. **建仓库**：GitHub 上新建一个仓库。免费账号的 Pages 只对 **Public** 仓库开放，所以**建议选 Public**。
-2. **推送代码**（把 `<你的用户名>` 和 `<仓库名>` 替换掉）：
-   ```bash
-   git init -b main
-   git add .
-   git commit -m "科研前沿雷达：初始版本"
-   git remote add origin https://github.com/<你的用户名>/<仓库名>.git
-   git push -u origin main
-   ```
-3. **开启 Pages（必做，且必须在第一次成功部署之前）**：
-   仓库 → **Settings** → 左侧 **Pages** → Build and deployment → **Source** 选 **GitHub Actions**。
-   这一步无法由 workflow 自动完成——实测 `actions/configure-pages` 的 `enablement: true`
-   在仓库尚未开通 Pages 时会直接失败，所以必须手动点一次。
-4. **等第一次构建**：推送代码本身就会触发一次；也可以到仓库 → Actions →「抓取并发布」→ Run workflow 手动触发。
-   首次约 4–6 分钟（要抓 30 余本期刊 + 提取配图）。
-5. 得到一个永久链接：`https://<你的用户名>.github.io/<仓库名>/`
-
-之后每 6 小时会自动重建一次，`.github/workflows/deploy.yml` 里的 `cron` 可以按需调整。
-
-### 两种运行形态
-
-同一套前端支持两种形态，构建产物互不覆盖：
-
-| | 命令 | 产物 | 数据来源 |
+| 学科 | 期刊 | 默认门槛 | 预印本来源 |
 | --- | --- | --- | --- |
-| 本地服务 | `npm start` | `web/dist/` | `/api/*`，可点按钮实时抓取 |
-| 静态发布 | `npm run build:static` | `web/dist-static/` | 随站点发布的 `data/*.json` |
+| **人工智能** | 17 本：Nature MI、IEEE TPAMI、IJCV、IEEE TIP、Inf. Fusion、Med. Image Anal.、IEEE TKDE、IEEE TNNLS 等 | 篇均被引 ≥ 9（默认启用 9 本） | arXiv `cs.AI` `cs.LG` `cs.CV` `cs.CL` `cs.NE` `cs.RO` `stat.ML` |
+| **遥感** | 19 本：RSE、ISPRS J P&RS、IEEE TGRS、ESSD、J. Remote Sens.、IEEE GRSM、ISPRS IJGI 等 | 篇均被引 ≥ 6（默认启用 18 本） | arXiv `eess.IV` `physics.ao-ph` + 关键词检索 |
 
-静态形态下顶部按钮会变成「手动更新」，点击跳转到 GitHub Actions 页面触发一次重建
-（该链接来自 CI 环境变量，本地构建时不显示）。
-
-### 注意事项
-
-- **定时任务会被暂停**：GitHub 在仓库连续 60 天没有提交后会自动停用定时工作流。
-  届时在 Actions 页面点一次 Run workflow，或随便推一个提交即可恢复。站点本身不会挂，只是停止更新。
-- **国内访问**：GitHub Pages 在国内时快时慢。如果主要给国内同行用，见下面「国内访问更稳的方案」。
-- **缓存**：workflow 用 `actions/cache` 保留了配图缓存，让 arXiv 图源能跨次累积，而不是每次只抓最新的几十篇。
-
-### 其他部署方式
-
-- **云平台常驻进程**（Railway / Render / Fly.io）：项目是单个 Node 进程，已附 `Dockerfile`，连上仓库即可。
-  优点是能实时抓取，缺点是 Railway 需绑卡、Render 免费档 15 分钟无访问会休眠。
-  ```bash
-  docker build -t research-radar . && docker run -d -p 8787:8787 research-radar
-  ```
-- **国内访问更稳的方案**：租一台香港/新加坡轻量服务器（约 ¥150–350/年，免备案），
-  `git clone` 后 `npm ci && npm run build && npm start`，用 Nginx 反代到 8787。
-  用国内节点则域名需要 ICP 备案（1–3 周）。
-- **临时演示**：`cloudflared tunnel --url http://localhost:8787` 立刻得到临时公网链接，关掉即失效。
-- **同一局域网**：手机连同一 WiFi 访问 `http://<本机内网IP>:8787`，出了这个网络就打不开。
+时间窗口 90 天，每 6 小时自动更新一次。以 2026-09-16 的库为例：共 3772 篇（期刊 3376 / 预印本 396），其中 **2063 篇带摘要、225 篇带配图**。
 
 ---
 
-## 目录结构
+## 关于数据，你该知道的几件事
 
-```
-journals.json              学科与期刊白名单（唯一需要改的配置）
-server/
-  index.mjs                HTTP 服务：API + 图片代理 + 静态前端 + 定时刷新（仅本地服务形态）
-  lib/
-    config.mjs             配置加载
-    openalex.mjs           期刊论文抓取（主通道）
-    crossref.mjs           期刊发现第二通道 + 摘要补全
-    arxiv.mjs              预印本抓取
-    semanticscholar.mjs    摘要兜底
-    figures.mjs            预印本配图提取（含磁盘缓存）
-    refresh.mjs            抓取管线：拉取 → 合并去重 → 补摘要 → 提图 → 落盘
-    util.mjs               文本清洗（LaTeX 残留、摘要还原）等
-scripts/
-  harvest-journals.mjs     抓取期刊指标
-  build-config.mjs         生成 journals.json
-  refresh-once.mjs         命令行手动抓取
-  export-static.mjs        导出随站点发布的静态 JSON
-web/
-  src/api.js               数据访问层：服务器模式 / 静态模式 的唯一差异点
-  dist/                    本地服务形态的构建产物
-  dist-static/             静态发布形态的构建产物
-.github/workflows/deploy.yml   定时抓取 + 打包 + 发布到 GitHub Pages
-data/                      运行时缓存（papers.json / figures.json，可删）
-```
+**「篇均被引」不是影响因子。** JCR 影响因子是付费数据，本站改用 [OpenAlex](https://openalex.org) 的*两年篇均被引*作为免费替代口径。两者高度相关但数值有出入，所以界面上如实标注为「篇均被引」，滑杆调的也是它。
 
----
+**约一半论文能看到摘要，瓶颈在出版商。** 摘要合并了 OpenAlex、[Crossref](https://www.crossref.org)、[Semantic Scholar](https://www.semanticscholar.org) 三个公开数据源，仍有一半左右拿不到——Elsevier 系的 Information Fusion、Pattern Recognition、Knowledge-Based Systems、Expert Systems with Applications 几乎不提供摘要。拿不到时卡片会写明「该来源未提供摘要」并给出原文链接，不会留白。
 
-## 环境变量
+**配图只来自开放获取预印本。** 订阅制期刊的正文插图受版权保护，本站不抓取、不转载，只给 DOI 跳转。
 
-| 变量 | 默认 | 说明 |
-| --- | --- | --- |
-| `PORT` | `8787` | 服务端口 |
-| `RADAR_MAILTO` | `research-radar@example.com` | 请求 OpenAlex/Crossref 时附带的联系邮箱，建议改成你自己的（可进入更稳定的「礼貌池」） |
-
----
-
-## 数据可得性实测（重要，决定了你能看到什么）
-
-这些结论都是本项目在开发时用真实 API 跑出来的，不是猜测：
-
-**1. 摘要覆盖率约 50%，瓶颈在出版商而非代码。**
-OpenAlex 对多数期刊的摘要覆盖并不完整。实测某次抓取：Nature MI 9/25、ISPRS J 11/25、RSE 25/50，而 Elsevier 系的
-Information Fusion、Pattern Recognition、Knowledge-Based Systems、Expert Systems with Applications
-**几乎完全不提供摘要**（个别刊物低于 10%）。本项目用 OpenAlex → Crossref → Semantic Scholar 三源合并补全，
-仍无法突破出版商的数据政策。缺失时卡片会明确写「该来源未提供摘要」并给出原文链接，不会静默留白。
-
-**2. 部分期刊向开放索引供货延迟，会出现「近 N 天无新论文」。**
-实测某些 IEEE 期刊的收录会阶段性停滞（例如 TGRS 一度停更数月）。本项目用 Crossref 的 DOI 注册数据作第二条发现通道，
-把 TGRS 从 0 篇补到 249 篇。即便如此，仍会有刊物在某个窗口内确实没有新内容，侧边栏会用**虚线标签**标出来，
-鼠标悬停可看到该刊最新被收录的日期。
-
-**3. 配图只来自开放获取预印本。**
-arXiv 只有 2023 年 12 月之后的论文有 HTML 版，更早的预印本提不到配图。订阅制期刊的正文插图受版权保护，
-本应用不抓取、不转载——这是设计决策，不是缺陷。
-
-**4. 首次加载约 1.6 MB（gzip 后）。**
-库内约 3700–4000 篇文献含完整摘要。服务端开启了 gzip 与 ETag，**再次访问命中 304，不重复传输**；
-数据每 6 小时更新一次时才会重新下载。
+**本站不做任何需要登录的抓取。** 付费期刊只索引元数据与摘要，全文由你用自己的机构订阅查看——所以这个链接可以放心转给同事。
 
 ---
 
 ## 常见问题
 
-**浏览器打开是 502 / 连不上？**
-多半是系统代理拦截了 localhost。终端里可用 `curl --noproxy '*' http://127.0.0.1:8787/` 验证服务是否正常；
-浏览器请把 `localhost` / `127.0.0.1` 加入代理例外（Chrome/Edge 默认已豁免，Clash 等代理工具需在规则里放行）。
+**某本期刊最近怎么没有新论文？**
+部分出版方（尤其 IEEE）向开放索引供货会阶段性延迟。本站用 OpenAlex + Crossref 两条通道合并发现，仍可能遇到某本刊在窗口内确实没有新内容。侧边栏会用**虚线标签**标出这类期刊，鼠标悬停可看到它最新被索引的日期。
 
-**想改抓取窗口或刷新频率？**
-编辑 `journals.json` 顶层的 `windowDays`（默认 90 天）与 `refreshIntervalHours`（默认 6 小时）。
+**为什么这篇没有摘要 / 没有配图？**
+见上一节。摘要缺失是出版商的数据政策所致，配图则只有 arXiv 预印本提供。
 
-**想换成我自己的邮箱？**
-设置环境变量 `RADAR_MAILTO=you@example.com`。OpenAlex/Crossref 会据此把请求归入更稳定的「礼貌池」。
+**打开有点慢？**
+首次需加载约 1.7 MB（gzip 后）的数据，之后浏览器缓存，10 分钟内不重复传输。站点托管在 GitHub Pages，国内访问时快时慢。
+
+**顶部的「手动更新」是做什么的？**
+数据每 6 小时由定时任务重建一次；点它会打开 GitHub Actions 页面，可手动触发一次重新抓取（约 5 分钟）。
+
+**能加上我关心的期刊或学科吗？**
+可以，见文末「自行部署」；也欢迎直接开 Issue 告诉我。
+
+---
+
+## 后续开发方向
+
+**近期**
+
+- **配图覆盖面** — 把开放获取期刊（Nature Communications、MDPI、Frontiers 等的 CC-BY 图片）也纳入配图源，不再只限 arXiv 预印本。
+- **摘要覆盖率** — 接入 Europe PMC / PubMed 等开放源，继续压缩「无摘要」的比例。
+- **订阅推送** — 按学科或关键词提供 RSS / 邮件摘要。
+- **收藏与已读** — 浏览器本地保存，不需要账号。
+
+**中期**
+
+- **新增学科** — 生命科学、材料、地球科学等，加一段配置即可，无需改代码。
+- **AI 速读** — 为每篇论文生成一句话中文速览与要点，支持中英摘要切换。
+- **指标扩展** — 补充 h-index、SJR 等免费口径，支持更细的期刊筛选。
+- **PWA** — 加到手机主屏，支持离线阅读。
+
+**探索**
+
+- **国内访问优化** — 镜像站或香港 / 新加坡轻量服务器（免备案），给国内同行更稳的体验。
+- **个性化推荐** — 按阅读偏好排序。
+- **文献管理联动** — 一键导入 Zotero。
+
+---
+
+## 自行部署（可选）
+
+想换成本方向的期刊清单、加学科，或者自己维护一份：
+
+```bash
+git clone https://github.com/khc2297980652-art/research-frontier-radar.git
+cd research-frontier-radar
+npm ci
+npm run build:static    # 抓取 + 打包成纯静态站点
+npm start               # 或本地起服务：http://localhost:8787
+```
+
+- **学科与期刊白名单**集中在根目录的 `journals.json`，改这一个文件即可，前端会自动出现新学科标签页（文件内有字段说明）。
+- **自动发布**：仓库已含 GitHub Actions 工作流。推送到你自己的仓库后，到 **Settings → Pages** 把 Source 选为 **GitHub Actions**，之后每 6 小时自动重建发布——不需要服务器、不需要域名、不需要备案。
+- **窗口与频率**：`journals.json` 里的 `windowDays`（默认 90 天）、`refreshIntervalHours`（默认 6 小时）。
+
+---
+
+## 反馈
+
+想加期刊、加学科，或发现数据有问题，欢迎开 [Issue](https://github.com/khc2297980652-art/research-frontier-radar/issues)。
+
+数据来自 [OpenAlex](https://openalex.org)、[Crossref](https://www.crossref.org)、[Semantic Scholar](https://www.semanticscholar.org) 与 [arXiv](https://arxiv.org)。本站只做索引与聚合，论文与图片的版权归原作者及出版方所有。

@@ -596,6 +596,76 @@ input.with-icon {
 }
 
 /* 摘要 — 本应用的重点展示区 */
+/* AI 速读：放在摘要之上，用品牌色强调，是卡片里最先被扫到的信息块 */
+.tldr {
+  border: 1px solid var(--brand-100);
+  border-left: 3px solid var(--brand-600);
+  border-radius: 8px;
+  background: var(--brand-50);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.dark .tldr {
+  background: rgba(66, 133, 244, 0.08);
+  border-color: rgba(66, 133, 244, 0.25);
+  border-left-color: var(--brand-500);
+}
+.tldr-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.tldr-eyebrow {
+  color: var(--brand-700);
+}
+.dark .tldr-eyebrow {
+  color: var(--brand-300);
+}
+.tldr-note {
+  font-size: 11px;
+  color: var(--fg-faint);
+}
+.tldr-line {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+}
+.tldr-points {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+.tldr-points li {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  overflow-wrap: anywhere;
+}
+.tldr-meta {
+  margin: 8px 0 0;
+  display: grid;
+  gap: 4px;
+}
+.tldr-meta > div {
+  display: flex;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.tldr-meta dt {
+  flex: 0 0 auto;
+  font-weight: 600;
+  color: var(--fg-faint);
+}
+.tldr-meta dd {
+  margin: 0;
+  color: var(--fg-muted);
+  overflow-wrap: anywhere;
+}
+
 .abstract {
   border: 1px solid var(--border);
   border-left: 3px solid var(--brand-300);

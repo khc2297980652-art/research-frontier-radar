@@ -5,6 +5,7 @@ import { fetchArxivQuery } from './arxiv.mjs'
 import { fetchCrossrefJournal } from './crossref.mjs'
 import { fetchAbstractsByDoi } from './semanticscholar.mjs'
 import { attachFigures } from './figures.mjs'
+import { attachSummaries } from './summarize.mjs'
 import { mapPool, sleep } from './http.mjs'
 import { normTitle, normalizeDoi, tidy } from './util.mjs'
 
@@ -34,10 +35,10 @@ export function isStale(store, cfg) {
   return ageHours >= (cfg.refreshIntervalHours ?? 6)
 }
 
-const keyOf = (p) => (p.doi ? 'doi:' + normalizeDoi(p.doi) : 'tk:' + normTitle(p.title))
+export const keyOf = (p) => (p.doi ? 'doi:' + normalizeDoi(p.doi) : 'tk:' + normTitle(p.title))
 
 /** 合并同一篇论文的多来源记录：已有的字段不被覆盖，缺失的字段被补齐 */
-function mergeInto(base, extra) {
+export function mergeInto(base, extra) {
   base.disciplines = [...new Set([...(base.disciplines || []), ...(extra.disciplines || [])])]
   if (!base.abstract && extra.abstract) {
     base.abstract = extra.abstract
@@ -64,7 +65,7 @@ function mergeInto(base, extra) {
  * 按期刊合并两条发现通道的结果。
  * OpenAlex 提供摘要、被引与开放获取信息；Crossref 提供 OpenAlex 还没收录的最新 DOI。
  */
-function mergeJournalChannels(openalexList, crossrefList) {
+export function mergeJournalChannels(openalexList, crossrefList) {
   const byDoi = new Map()
   for (const p of openalexList) byDoi.set(normalizeDoi(p.doi), p)
   let added = 0
@@ -87,7 +88,7 @@ function mergeJournalChannels(openalexList, crossrefList) {
 }
 
 /** 把期刊论文与同名的 arXiv 预印本对上，用来补摘要与配图 */
-function linkPreprints(journalPapers, arxivPapers) {
+export function linkPreprints(journalPapers, arxivPapers) {
   const byTitle = new Map()
   for (const a of arxivPapers) {
     const k = normTitle(a.title)
@@ -241,12 +242,29 @@ export async function runRefresh({ onLog = () => {} } = {}) {
     })
     log(`配图：新增 ${figStat.fetched} 篇，缓存累计 ${figStat.cached} 篇`)
 
-    // ---------- 7. 收尾 ----------
+    // ---------- 7. 收敛到最终展示集 ----------
     papers = papers
       // Crossref 按“最近收录”取数，会带回一批更早发表的论文，这里统一按窗口收敛
       .filter((p) => p.date && p.date >= since)
       .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : (b.citedBy || 0) - (a.citedBy || 0)))
       .slice(0, MAX_PAPERS)
+
+    // ---------- 8. LLM 结构化速读（放在收敛之后，只为真正展示的论文计费） ----------
+    runtime.progress = `生成速读 · 候选 ${papers.filter((p) => p.abstract).length} 篇`
+    const sumStat = await attachSummaries(papers, {
+      onProgress: (d, t) => {
+        runtime.progress = `生成速读 ${d}/${t}`
+      },
+    })
+    if (sumStat.skipped) {
+      log('速读：未配置 LLM 密钥（DEEPSEEK_API_KEY 或 ANTHROPIC_API_KEY），跳过（不影响其余数据）')
+    } else {
+      log(
+        `速读（${sumStat.provider}/${sumStat.model}）：新增 ${sumStat.generated} 篇` +
+          (sumStat.failed ? `（失败 ${sumStat.failed} 篇，留待下轮）` : '') +
+          `，缓存累计 ${sumStat.cached} 篇`
+      )
+    }
 
     const countBy = (fn) => papers.filter(fn).length
     const store = {
@@ -261,6 +279,7 @@ export async function runRefresh({ onLog = () => {} } = {}) {
         preprints: countBy((p) => p.kind === 'preprint'),
         withAbstract: countBy((p) => p.abstract),
         withFigures: countBy((p) => p.figures?.length),
+        withSummary: countBy((p) => p.summary),
       },
       journalStats,
       errors,
@@ -273,7 +292,7 @@ export async function runRefresh({ onLog = () => {} } = {}) {
     runtime.progress = `完成 · ${papers.length} 篇`
     log(
       `完成：${papers.length} 篇（期刊 ${store.counts.journals} / 预印本 ${store.counts.preprints}；` +
-        `含摘要 ${store.counts.withAbstract}，含配图 ${store.counts.withFigures}）`
+        `含摘要 ${store.counts.withAbstract}，含配图 ${store.counts.withFigures}，含速读 ${store.counts.withSummary}）`
     )
     return store
   } catch (e) {

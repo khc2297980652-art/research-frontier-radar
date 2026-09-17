@@ -49,6 +49,6 @@ const abs = (p) => `${OUT}/${p}`
 console.log(`已导出静态数据 → ${abs('state.json')} / ${abs('papers.json')}`)
 console.log(
   `  论文 ${store.counts.total} 篇（期刊 ${store.counts.journals} / 预印本 ${store.counts.preprints}，` +
-    `含摘要 ${store.counts.withAbstract}，含配图 ${store.counts.withFigures}）`
+    `含摘要 ${store.counts.withAbstract}，含配图 ${store.counts.withFigures}，含速读 ${store.counts.withSummary ?? 0}）`
 )
 console.log(`  数据时间 ${store.generatedAt}`)

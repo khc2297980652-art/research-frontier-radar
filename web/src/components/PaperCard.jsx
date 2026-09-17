@@ -22,6 +22,7 @@ export default function PaperCard({ paper, index, expandedDefault, onOpenFigure,
   const isJournal = paper.kind === 'journal'
   const figures = paper.figures || []
   const abstract = paper.abstract || ''
+  const summary = paper.summary || null
 
   async function copyAbstract() {
     try {
@@ -76,6 +77,39 @@ export default function PaperCard({ paper, index, expandedDefault, onOpenFigure,
         {paper.topic ? ` · ${paper.topic}` : ''}
         {paper.journalRef ? ` · 已发表于 ${paper.journalRef}` : ''}
       </p>
+
+      {summary && (
+        <div className="tldr">
+          <div className="tldr-head">
+            <span className="eyebrow tldr-eyebrow">AI 速读</span>
+            <span className="tldr-note" title={`由 ${summary.model || '大模型'} 依据摘要生成，仅供快速筛选参考`}>
+              依据摘要 · AI 生成
+            </span>
+          </div>
+          <p className="tldr-line">{summary.tldr}</p>
+          {summary.contributions?.length > 0 && (
+            <ul className="tldr-points">
+              {summary.contributions.map((c, i) => (
+                <li key={i}>{c}</li>
+              ))}
+            </ul>
+          )}
+          <dl className="tldr-meta">
+            {summary.method && (
+              <div>
+                <dt>方法</dt>
+                <dd>{summary.method}</dd>
+              </div>
+            )}
+            {summary.limitations && (
+              <div>
+                <dt>局限</dt>
+                <dd>{summary.limitations}</dd>
+              </div>
+            )}
+          </dl>
+        </div>
+      )}
 
       <div className={`abstract${expanded ? '' : ' clamped'}`}>
         <div className="abstract-head">

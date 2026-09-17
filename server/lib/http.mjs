@@ -5,16 +5,26 @@ export const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 /**
  * 带重试与超时的 fetch。429/5xx 会退避重试；404 等客户端错误直接抛出。
+ * 传入 body（对象或字符串）即发 POST；默认 GET，向后兼容原有调用。
  */
 export async function fetchWithRetry(
   url,
-  { timeout = 30000, retries = 3, headers = {}, as = 'json', retryDelay = 1500 } = {}
+  { timeout = 30000, retries = 3, headers = {}, as = 'json', retryDelay = 1500, method, body } = {}
 ) {
+  const hasBody = body != null
+  const payload = hasBody && typeof body !== 'string' ? JSON.stringify(body) : body
   let lastErr
   for (let i = 0; i <= retries; i++) {
     try {
       const res = await fetch(url, {
-        headers: { 'User-Agent': UA, Accept: '*/*', ...headers },
+        method: method || (hasBody ? 'POST' : 'GET'),
+        headers: {
+          'User-Agent': UA,
+          Accept: '*/*',
+          ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
+          ...headers,
+        },
+        body: hasBody ? payload : undefined,
         signal: AbortSignal.timeout(timeout),
         redirect: 'follow',
       })

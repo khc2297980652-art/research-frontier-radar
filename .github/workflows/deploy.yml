@@ -35,18 +35,29 @@ jobs:
       - name: 安装依赖
         run: npm ci
 
-      # 配图缓存让 arXiv 图源能跨次累积，而不是每次只抓最新的几十篇
-      - name: 恢复配图缓存
+      # 两份缓存都跨次累积：
+      # - figures.json   配图源（arXiv），否则每次只抓最新的几十篇
+      # - summaries.json LLM 速读结果，同一篇只算一次，控制成本
+      - name: 恢复数据缓存
         uses: actions/cache@v4
         with:
-          path: data/figures.json
-          key: figures-${{ github.run_id }}
-          restore-keys: figures-
+          path: |
+            data/figures.json
+            data/summaries.json
+          key: radar-data-${{ github.run_id }}
+          # 保留旧的 figures- 前缀，让此前的配图缓存继续可用
+          restore-keys: |
+            radar-data-
+            figures-
 
       - name: 抓取最新文献
         run: npm run refresh
         env:
           RADAR_MAILTO: ${{ vars.RADAR_MAILTO }}
+          # 速读用的大模型密钥：任配其一即可（DeepSeek 优先，更省）。
+          # 未配置时该步骤整体跳过，其余数据照常产出。密钥只在 Actions 里，不进代码库。
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       - name: 导出静态数据并构建
         run: npm run build:static

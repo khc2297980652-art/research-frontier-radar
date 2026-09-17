@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI 速读卡片 · UI 预览（mock）</title>
+<!--
+  这是一个「UI 预览」：卡片的真实 DOM 结构 + styles.css 里的真实样式，
+  但论文内容是示例数据（并非真实模型输出）。用于快速看版式。
+  用法：浏览器打开本文件 → 截取 .card 区域 → 存为 docs/screenshot-tldr.png。
+  想要真实模型输出的截图：本地配置 ANTHROPIC_API_KEY 跑一次 npm run refresh 再截图。
+-->
+<style>
+  :root {
+    --brand-50: #e8f0fe;
+    --brand-100: #d2e3fc;
+    --brand-300: #8ab4f8;
+    --brand-500: #4285f4;
+    --brand-600: #1a73e8;
+    --brand-700: #0b57d0;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-900: #111827;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --border: var(--gray-200);
+    --border-strong: var(--gray-300);
+    --fg: var(--gray-900);
+    --fg-muted: var(--gray-600);
+    --fg-faint: var(--gray-500);
+    --abstract-bg: #fbfcfe;
+    --radius-card: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 40px 24px;
+    background: #eef1f6;
+    color: var(--fg);
+    font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+      'PingFang SC', 'Microsoft YaHei', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .frame { width: 720px; max-width: 100%; }
+
+  /* ---- 卡片（摘自 styles.css，保持一致） ---- */
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+    padding: 18px;
+  }
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .pill {
+    border-radius: 9999px;
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    font-size: 12px;
+    color: var(--fg-muted);
+    white-space: nowrap;
+  }
+  .pill.brand {
+    background: var(--brand-50);
+    border-color: var(--brand-100);
+    color: var(--brand-700);
+    font-weight: 500;
+  }
+  .pill.metric {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+  }
+  .pill.date {
+    margin-left: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11px;
+    border-color: transparent;
+    color: var(--fg-faint);
+  }
+  .card h2 { font-size: 16px; line-height: 1.45; margin: 0 0 6px; font-weight: 600; letter-spacing: -0.025em; }
+  .card h2 a { color: var(--fg); text-decoration: none; }
+  .authors { font-size: 12px; color: var(--fg-faint); margin: 0 0 12px; }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand-700);
+  }
+
+  /* ---- AI 速读 ---- */
+  .tldr {
+    border: 1px solid var(--brand-100);
+    border-left: 3px solid var(--brand-600);
+    border-radius: 8px;
+    background: var(--brand-50);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .tldr-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+  .tldr-eyebrow { color: var(--brand-700); }
+  .tldr-note { font-size: 11px; color: var(--fg-faint); }
+  .tldr-line { margin: 0; font-size: 14px; font-weight: 600; line-height: 1.6; color: var(--fg); overflow-wrap: anywhere; }
+  .tldr-points { margin: 8px 0 0; padding-left: 18px; }
+  .tldr-points li { font-size: 13px; line-height: 1.6; color: var(--fg-muted); overflow-wrap: anywhere; }
+  .tldr-meta { margin: 8px 0 0; display: grid; gap: 4px; }
+  .tldr-meta > div { display: flex; gap: 8px; font-size: 12.5px; line-height: 1.55; }
+  .tldr-meta dt { flex: 0 0 auto; font-weight: 600; color: var(--fg-faint); }
+  .tldr-meta dd { margin: 0; color: var(--fg-muted); overflow-wrap: anywhere; }
+
+  /* ---- 摘要 ---- */
+  .abstract {
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brand-300);
+    border-radius: 8px;
+    background: var(--abstract-bg);
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .abstract-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .abstract-toggle { background: none; border: none; padding: 0; font: inherit; font-size: 12px; color: var(--brand-700); cursor: pointer; }
+  .abstract p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.68;
+    color: var(--fg);
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .caption { color: var(--gray-500); font-size: 12px; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <article class="card">
+      <div class="card-top">
+        <span class="pill brand">IEEE TPAMI</span>
+        <span class="pill metric" title="OpenAlex 近两年篇均被引次数">篇均被引 12.4</span>
+        <span class="pill">人工智能</span>
+        <time class="pill date">2026-09-10</time>
+      </div>
+
+      <h2><a href="#">Test-Time Adaptation for Vision-Language Models via Entropy-Guided Prompt Refinement</a></h2>
+
+      <p class="authors">L. Chen, M. Rodriguez, A. Kumar 等 6 位作者 · Vision-Language</p>
+
+      <div class="tldr">
+        <div class="tldr-head">
+          <span class="eyebrow tldr-eyebrow">AI 速读</span>
+          <span class="tldr-note">依据摘要 · AI 生成</span>
+        </div>
+        <p class="tldr-line">提出一种测试时自适应方法，在不重训模型的前提下，通过熵引导的提示词优化提升视觉-语言模型在分布外数据上的零样本分类准确率。</p>
+        <ul class="tldr-points">
+          <li>提出熵引导的连续提示优化目标，无需源域数据或标签即可在线自适应</li>
+          <li>在 15 个分布外基准上平均提升 3.8% 的零样本准确率</li>
+          <li>单样本自适应开销小于一次完整前向推理的 5%</li>
+        </ul>
+        <dl class="tldr-meta">
+          <div><dt>方法</dt><dd>冻结主干网络，仅在测试阶段以无标签样本的预测熵作为信号，迭代更新连续提示向量。</dd></div>
+          <div><dt>局限</dt><dd>类别分布严重不均衡时增益减弱；摘要未提及在检测、分割任务上的表现。</dd></div>
+        </dl>
+      </div>
+
+      <div class="abstract">
+        <div class="abstract-head">
+          <span class="eyebrow">摘要</span>
+          <button class="abstract-toggle" type="button">复制</button>
+        </div>
+        <p>Vision-language models such as CLIP achieve strong zero-shot recognition but degrade sharply under distribution shift at deployment time. We propose an entropy-guided test-time adaptation framework that refines a small set of continuous prompt vectors online, using only the model's own predictive entropy on unlabeled test samples as the optimization signal. The backbone remains frozen, so no source data, labels, or retraining are required. Across 15 out-of-distribution benchmarks our method improves top-1 zero-shot accuracy by 3.8% on average while adding less than 5% overhead per forward pass…</p>
+        <button class="abstract-toggle" type="button" style="padding-top:4px">展开全文</button>
+      </div>
+    </article>
+    <p class="caption">UI 预览 · 示例内容（非真实模型输出）— 版式与线上一致</p>
+  </div>
+</body>
+</html>
